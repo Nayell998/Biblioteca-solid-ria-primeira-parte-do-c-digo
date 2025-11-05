@@ -1,0 +1,31 @@
+import os
+
+ARQUIVO = "biblioteca.txt"
+biblioteca = []
+
+# --- PARTE DO FERNANDO ---
+# Funções de arquivo (ler e salvar dados)
+
+def carregar_dados():
+    """Carrega os dados do arquivo TXT, se existir."""
+    global biblioteca
+    if os.path.exists(ARQUIVO):
+        with open(ARQUIVO, "r", encoding="utf-8") as f:
+            for linha in f:
+                partes = linha.strip().split(";")
+                if len(partes) == 4:
+                    titulo, autor, emprestado, quem = partes
+                    biblioteca.append({
+                        "titulo": titulo,
+                        "autor": autor,
+                        "emprestado": emprestado == "True",
+                        "quem": None if quem == "None" else quem
+                    })
+
+
+def salvar_dados():
+    """Salva os dados em um arquivo TXT."""
+    with open(ARQUIVO, "w", encoding="utf-8") as f:
+        for livro in biblioteca:
+            linha = f"{livro['titulo']};{livro['autor']};{livro['emprestado']};{livro['quem']}\n"
+            f.write(linha)
