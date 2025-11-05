@@ -1,0 +1,1 @@
+# Biblioteca-solid-ria-primeira-parte-do-c-digo
