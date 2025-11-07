@@ -29,3 +29,105 @@ def salvar_dados():
         for livro in biblioteca:
             linha = f"{livro['titulo']};{livro['autor']};{livro['emprestado']};{livro['quem']}\n"
             f.write(linha)
+           # --- PARTE DO THIAGO ---
+# Funções principais de manipulação dos livros
+
+def cadastrar_livro():
+    titulo = input("Título do livro: ")
+    autor = input("Autor: ")
+    biblioteca.append({
+        "titulo": titulo,
+        "autor": autor,
+        "emprestado": False,
+        "quem": None
+    })
+    salvar_dados()
+    print(f"Livro '{titulo}' cadastrado!\n")
+
+
+def emprestar_livro():
+    titulo = input("Título do livro a emprestar: ")
+    for livro in biblioteca:
+        if livro["titulo"].lower() == titulo.lower() and not livro["emprestado"]:
+            nome = input("Nome de quem pega: ")
+            livro["emprestado"] = True
+            livro["quem"] = nome
+            salvar_dados()
+            print(f"Livro '{titulo}' emprestado para {nome}.\n")
+            return
+    print("Livro não encontrado ou já emprestado.\n")
+
+
+def devolver_livro():
+    titulo = input("Livro a devolver: ")
+    for livro in biblioteca:
+        if livro["titulo"].lower() == titulo.lower() and livro["emprestado"]:
+            livro["emprestado"] = False
+            livro["quem"] = None
+            salvar_dados()
+            print(f"Livro '{titulo}' devolvido!\n")
+            return
+    print("Livro não encontrado.\n")
+
+
+def listar_livros():
+    if not biblioteca:
+        print("Nenhum livro cadastrado.\n")
+        return
+    print("Lista de livros:")
+    for livro in biblioteca:
+        status = f"Emprestado para {livro['quem']}" if livro["emprestado"] else "Disponível"
+        print(f" - {livro['titulo']} ({livro['autor']}) → {status}")
+    print()
+     # --- PARTE DO FÁBIO ---
+# Funções de busca e menu principal
+
+def buscar_livro():
+    """Permite buscar livros por título ou autor."""
+    termo = input("Digite o título ou autor para buscar: ").lower()
+    encontrados = []
+    for livro in biblioteca:
+        if termo in livro["titulo"].lower() or termo in livro["autor"].lower():
+            encontrados.append(livro)
+
+    if encontrados:
+        print(f"\nResultados da busca por '{termo}':")
+        for livro in encontrados:
+            status = f"Emprestado para {livro['quem']}" if livro["emprestado"] else "Disponível"
+            print(f" - {livro['titulo']} ({livro['autor']}) → {status}")
+        print()
+    else:
+        print(f"Nenhum livro encontrado com '{termo}'.\n")
+
+
+def menu():
+    carregar_dados()
+    while True:
+        print("=== MENU DA BIBLIOTECA ===")
+        print("1 - Cadastrar livro")
+        print("2 - Emprestar livro")
+        print("3 - Devolver livro")
+        print("4 - Listar livros")
+        print("5 - Buscar livro")
+        print("0 - Sair")
+        op = input("Escolha: ")
+
+        if op == "1":
+            cadastrar_livro()
+        elif op == "2":
+            emprestar_livro()
+        elif op == "3":
+            devolver_livro()
+        elif op == "4":
+            listar_livros()
+        elif op == "5":
+            buscar_livro()
+        elif op == "0":
+            print("Saindo... Até logo!")
+            break
+        else:
+            print("Opção inválida!\n")
+
+
+# --- INÍCIO DO PROGRAMA ---
+menu()
